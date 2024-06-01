@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Average Calculator with Simple Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .container {
+            background-color: #fff;
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #333;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        label {
+            margin-bottom: 5px;
+            font-size: 1.2em;
+            color: #555;
+        }
+        
+        input {
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 100%;
+            max-width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        
+        button {
+            padding: 15px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #e0e0e0;
+        }
+        
+        button:hover {
+            background-color: #ccc;
+        }
+        
+        button.clear {
+            grid-column: span 2;
+            background-color: #ff7043;
+            color: #fff;
+        }
+        
+        button.equals {
+            grid-column: span 4;
+            background-color: #2196f3;
+            color: #fff;
+        }
+        
+        .calculator {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .result {
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .result p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Average Calculator </h1>
+        <form id="calcForm">
+            <label for="numberid">Enter Number ID (prime, fib, even, random):</label>
+            <input type="text" id="numberid" name="numberid" required>
+            <button type="submit">Calculate Average</button>
+        </form>
+        <div class="result" id="result"></div>
+        <div class="calculator">
+            <button>7</button>
+            <button>8</button>
+            <button>9</button>
+            <button class="clear">C</button>
+            <button>4</button>
+            <button>5</button>
+            <button>6</button>
+            <button>/</button>
+            <button>1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>*</button>
+            <button>0</button>
+            <button>+</button>
+            <button>-</button>
+            <button class="equals">=</button>
+        </div>
+    </div>
+    <script>
+        document.getElementById('calcForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const numberid = document.getElementById('numberid').value;
+            fetch(`/numbers/${numberid}`)
+                .then(response => response.json())
+                .then(data => {
+                    const resultDiv = document.getElementById('result');
+                    if (data.error) {
+                        resultDiv.innerHTML = `<p style="color: red;">Error: ${data.error}</p>`;
+                    } else {
+                        resultDiv.innerHTML = `
+                            <p><strong>Numbers:</strong> ${data.numbers.join(', ')}</p>
+                            <p><strong>Average:</strong> ${data.average.toFixed(2)}</p>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('result').innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                });
+        });
+    </script>
+</body>
+
+</html>
